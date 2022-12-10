@@ -1,0 +1,29 @@
+name: Build
+
+on:
+  push:
+    
+jobs:
+  database:
+    runs-on: ubuntu-latest
+    services:
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        env:
+          SA_PASSWORD: "P@ssw0rd"
+          ACCEPT_EULA: "Y"
+        ports:
+          - 1433:1433
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Setup .NET Core SDK 6
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6'
+      - name: Install Dependencies
+        run: dotnet restore
+      - name: Run Infrastructure
+        run: dotnet run --project SomethingPro.Infrastructure
+      - name: Build Docker Image
+        run: docker build -t somethingpro .

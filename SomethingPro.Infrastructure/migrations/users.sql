@@ -1,0 +1,10 @@
+CREATE TABLE dbo.UserRegistration
+(
+    UserID               INT NOT NULL PRIMARY KEY IDENTITY,
+    Name VARCHAR(50),
+    FromTime DATETIME2  GENERATED ALWAYS AS ROW START NOT NULL,
+    UntilTime DATETIME2 GENERATED ALWAYS AS ROW END NOT NULL,
+    PERIOD FOR SYSTEM_TIME (FromTime, UntilTime)
+) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = dbo.UserRegistrationHistory));
+
+INSERT INTO dbo.UserRegistration (Name) VALUES ('John Doe');
